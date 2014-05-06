@@ -7,7 +7,7 @@
 # 1. Execute this afni_proc script with "bash [thisScriptName]" (no quotes or
 #    square brackets)
 # 2. Execute the resulting proc.* script using the directions printed at the
-#    end of step one (e.g., "tcsh -xef proc.exampleParticipant |& tee output.proc.exampleParticipant")
+#    end of step one's output (e.g., "tcsh -xef proc.exampleParticipant |& tee output.proc.exampleParticipant")
 # 3. After the script completes, look for errors with "less output.proc.exampleParticipant")
 # 4. cd to the results directory and review your results by 
 ################################################################################
