@@ -57,7 +57,7 @@ afni_proc.py \
 -blur_size 4 \
 -regress_stim_times ${stimTimesIG} ${stimTimesEG} \
 -regress_stim_labels IG EG \
--regress_basis 'TENT(0,24,9)' \
+-regress_basis 'TENT(0,12,4)' \
 -regress_apply_mot_types demean \
 -regress_censor_motion 0.3 \
 -regress_censor_outliers 0.1 \
