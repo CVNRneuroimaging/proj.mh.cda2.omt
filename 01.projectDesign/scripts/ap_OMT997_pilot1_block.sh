@@ -13,6 +13,39 @@
 ################################################################################
 
 
+# NOTE: the voice prompt stim_times format provided by MH had to be converted
+# to stim_file format (i.e., column of 1's and 0's) because AFNI won't accept
+# stim_times format for regressors of non-interest:
+
+#    timing_tool.py \
+#    -timing <name of exisiting stim_times file> \
+#    -timing_to_1D <name of stim_file file to be created> \
+#    -tr <output's time resolution in seconds> \
+#    -stim_dur 3 <stimulus duration in seconds> \
+#    -run_len <run duration in seconds>
+
+# ...which looks like this for MH's 3 s (== 1 TR) voice prompts in her runs of
+# 112 TRs (112 TRs == 114 transfered TRs minus 2 warm-up TRs):
+#
+#    timing_tool.py \
+#    -timing VoiceRegressors_OMT997pilot1_stim_timing.txt \
+#    -timing_to_1D voicePrompt_OMT997pilot1_stim_file.1D \
+#    -tr 3 \
+#    -stim_dur 3 \
+#    -run_len 336
+
+
+# NOTE: this combination of regressors does produce a non-fatal correlation warning:
+#
+#    ----------- correlation warnings -----------
+#    
+#    Warnings regarding Correlation Matrix: X.xmat.1D
+#    
+#      severity   correlation   cosine  regressor pair
+#        --------   -----------   ------  ----------------------------------------
+#          medium:       0.414       0.397  (23 vs. 24)  EG#3  vs.  voice#0
+
+
 
 #########################################################
 # VARIABLE DEFINITIONS:
@@ -21,6 +54,7 @@
 # Define variables to be used in this script's call to afni_proc. These values
 # could also be given directly to afni_proc, but storing them in variables
 # first makes your afni_proc command more readable.
+
 # ...EPI timeseries to be used as afni_proc inputs:
 acqfiles="/data/birc/Atlanta/OMT/06.acqfiles/OMT997/pilot1/FmriFootTapping/*_MNI.nii"
 # ...anatomic T1 (not skull-stripped) to be used as an afni_proc input:
@@ -30,10 +64,9 @@ disdacqs=2
 # ...stimulus timing files detailing task timing:
 stimTimesIG="/data/birc/Atlanta/OMT/03.FmriRegressors/OMT997/pilot1/IG_OMT997pilot1_stim_timing.1D"
 stimTimesEG="/data/birc/Atlanta/OMT/03.FmriRegressors/OMT997/pilot1/EG_OMT997pilot1_stim_timing.1D"
-stimTimesVoiceprompt="/data/birc/Atlanta/OMT/03.FmriRegressors/OMT997/pilot1/VoiceRegressors_OMT997pilot1_stim_timing.1D"
+stimTimesVoiceprompt="/data/birc/Atlanta/OMT/03.FmriRegressors/OMT997/pilot1/voicePrompt_OMT997pilot1_stim_file.1D"
 # ...participant identifier to be used in output filenames:
-participant="pOMT997s01.onsetsBlock.basisTent24.includesContrast"
-
+participant="pOMT997s01.onsetsBlock.basisTent12.includesContrast"
 
 
 #########################################################
@@ -57,6 +90,9 @@ afni_proc.py \
 -blur_size 4 \
 -regress_stim_times ${stimTimesIG} ${stimTimesEG} \
 -regress_stim_labels IG EG \
+-regress_extra_stim_files ${stimTimesVoiceprompt} \
+-regress_extra_stim_labels voice \
+-regress_RONI 3 \
 -regress_basis 'TENT(0,12,4)' \
 -regress_apply_mot_types demean \
 -regress_censor_motion 0.3 \
@@ -72,7 +108,7 @@ afni_proc.py \
 
 
 # gives per-stim-class fstats:
-#       -regress_opts_3dD -jobs 8 \
+#       TBD
 
 # TBD: I got rid of opt_3dD tout as a test
 # ...and -regress_reml_exec
