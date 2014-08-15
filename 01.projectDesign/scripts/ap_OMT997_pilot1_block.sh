@@ -76,11 +76,13 @@ participant="pOMT997s01.onsetsBlock.basisTent12.includesContrast"
 # Here is the afni_proc.py command executed for this analysis, and below that
 # command is an explanation of the command arguments (subcommands):
 
+mkdir ~/temp/apDir_${participant}
+cd ~/temp/apDir_${participant}
 
 afni_proc.py \
 -subj_id ${participant} \
--script /tmp/proc.${participant} \
--out_dir /tmp/results.${participant} \
+-script proc.${participant} \
+-out_dir results.${participant} \
 -dsets ${acqfiles} \
 -copy_anat ${anatWithSkull} \
 -blocks align volreg blur mask scale regress \
